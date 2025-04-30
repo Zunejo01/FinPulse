@@ -1,0 +1,199 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>FinPulse - Financial News Sentiment Analysis</title>
+    <link rel="stylesheet" href="/static/css/finpulse.css">
+    <script src="https://cdn.plot.ly/plotly-latest.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
+</head>
+<body>
+    <div class="container">
+        <header>
+            <h1><i class="fas fa-chart-line"></i> FinPulse</h1>
+            <p>Financial News Sentiment Analysis for Smarter Investment Decisions</p>
+        </header>
+
+        <div class="search-container">
+            <ul class="search-tabs">
+                <li class="active" data-tab="company">Company News</li>
+                <li data-tab="market">Market News</li>
+            </ul>
+            <div class="search-box" id="company-search">
+                <input type="text" id="symbol-input" placeholder="Enter a stock symbol (e.g. AAPL, MSFT, TSLA)">
+                <div class="search-controls">
+                    <select id="timeframe-select">
+                        <option value="7">Last 7 days</option>
+                        <option value="14">Last 14 days</option>
+                        <option value="30">Last 30 days</option>
+                    </select>
+                    <button id="company-button">Analyze</button>
+                </div>
+            </div>
+            <div class="search-box hidden" id="market-search">
+                <select id="category-select">
+                    <option value="general">General</option>
+                    <option value="forex">Forex</option>
+                    <option value="crypto">Crypto</option>
+                    <option value="merger">Mergers</option>
+                </select>
+                <div class="search-controls">
+                    <select id="market-count-select">
+                        <option value="50">50 news</option>
+                        <option value="100" selected>100 news</option>
+                        <option value="200">200 news</option>
+                    </select>
+                    <button id="market-button">Analyze</button>
+                </div>
+            </div>
+            <div class="loading-indicator" id="loading">
+                <div class="spinner"></div>
+                <p>Analyzing financial news...</p>
+            </div>
+        </div>
+
+        <div class="tabs-container">
+            <div class="tabs">
+                <button class="tab-btn active" data-tab="overview">Overview</button>
+                <button class="tab-btn" data-tab="sentiment">Sentiment</button>
+                <button class="tab-btn" data-tab="time-trends">Time Trends</button>
+                <button class="tab-btn" data-tab="word-analysis">Word Analysis</button>
+                <button class="tab-btn" data-tab="news">News</button>
+            </div>
+            
+            <div class="tab-content">
+                <!-- Overview Tab -->
+                <div class="tab-pane active" id="overview">
+                    <div class="overview-header">
+                        <div id="overview-text">
+                            <h2>Welcome to FinPulse</h2>
+                            <p>Enter a stock symbol or select a market category to analyze financial news sentiment.</p>
+                        </div>
+                    </div>
+                    <div class="cards-container">
+                        <div class="card" id="positive-card">
+                            <div class="card-icon positive">
+                                <i class="fas fa-smile"></i>
+                            </div>
+                            <div class="card-content">
+                                <h3>Positive</h3>
+                                <p class="percentage">-</p>
+                            </div>
+                        </div>
+                        <div class="card" id="negative-card">
+                            <div class="card-icon negative">
+                                <i class="fas fa-frown"></i>
+                            </div>
+                            <div class="card-content">
+                                <h3>Negative</h3>
+                                <p class="percentage">-</p>
+                            </div>
+                        </div>
+                        <div class="card" id="neutral-card">
+                            <div class="card-icon neutral">
+                                <i class="fas fa-meh"></i>
+                            </div>
+                            <div class="card-content">
+                                <h3>Neutral</h3>
+                                <p class="percentage">-</p>
+                            </div>
+                        </div>
+                        <div class="card" id="score-card">
+                            <div class="card-icon score">
+                                <i class="fas fa-chart-line"></i>
+                            </div>
+                            <div class="card-content">
+                                <h3>Overall Score</h3>
+                                <p class="percentage">-</p>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="chart-container">
+                        <div id="sentiment-overview-chart"></div>
+                    </div>
+                    <div class="visualization-summary">
+                        <h3>Visualization Summary</h3>
+                        <div class="viz-preview-container">
+                            <div class="viz-preview" id="sentiment-preview">
+                                <h4>Sentiment Distribution</h4>
+                                <div class="preview-placeholder" data-tab="sentiment">
+                                    <i class="fas fa-chart-pie"></i>
+                                    <span>View detailed analysis</span>
+                                </div>
+                            </div>
+                            <div class="viz-preview" id="time-preview">
+                                <h4>Time Trends</h4>
+                                <div class="preview-placeholder" data-tab="time-trends">
+                                    <i class="fas fa-chart-line"></i>
+                                    <span>View detailed analysis</span>
+                                </div>
+                            </div>
+                            <div class="viz-preview" id="word-preview">
+                                <h4>Word Analysis</h4>
+                                <div class="preview-placeholder" data-tab="word-analysis">
+                                    <i class="fas fa-cloud"></i>
+                                    <span>View detailed analysis</span>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                
+                <!-- Sentiment Tab -->
+                <div class="tab-pane" id="sentiment">
+                    <h2>Sentiment Distribution</h2>
+                    <div class="chart-container">
+                        <div id="sentiment-pie-chart"></div>
+                    </div>
+                </div>
+                
+                <!-- Time Trends Tab -->
+                <div class="tab-pane" id="time-trends">
+                    <h2>Sentiment Over Time</h2>
+                    <div class="chart-container">
+                        <div id="time-series-chart"></div>
+                    </div>
+                </div>
+                
+                <!-- Word Analysis Tab -->
+                <div class="tab-pane" id="word-analysis">
+                    <h2>Word Cloud</h2>
+                    <div class="wordcloud-container">
+                        <img id="wordcloud-image" src="" alt="Word Cloud">
+                    </div>
+                    <div class="common-words">
+                        <h3>Most Common Words</h3>
+                        <div id="common-words-list"></div>
+                    </div>
+                </div>
+
+                <!-- News Tab -->
+                <div class="tab-pane" id="news">
+                    <h2>Analyzed News</h2>
+                    <div class="news-filter">
+                        <button class="filter-btn active" data-filter="all">All</button>
+                        <button class="filter-btn" data-filter="positive">Positive</button>
+                        <button class="filter-btn" data-filter="neutral">Neutral</button>
+                        <button class="filter-btn" data-filter="negative">Negative</button>
+                    </div>
+                    <div class="news-container" id="news-list">
+                        <!-- News will be displayed here -->
+                        <div class="news-placeholder">
+                            <p>Search for a company or market category to see news</p>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <footer>
+            <p>&copy; 2023 FinPulse - Financial News Sentiment Analysis | <a href="#">Documentation</a> | <a href="#">About</a></p>
+            <p class="api-credit">Powered by <a href="https://finnhub.io" target="_blank">Finnhub.io</a></p>
+        </footer>
+    </div>
+
+    <script src="/static/js/finpulse.js"></script>
+</body>
+</html> 
